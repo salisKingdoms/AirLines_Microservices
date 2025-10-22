@@ -20,10 +20,17 @@ Each service is designed to be independent, lightweight, and RESTful, with inter
 
 ## 🧱 Services
 
-Service	Description	Status
-🧑‍💼 User Service	Manages user registration, login, and authentication	✅ Completed
-🛫 Flight Service	Handles flight schedules, routes, and airline data	🚧 In progress
-📘 Booking Service	Manages ticket booking, payments, and seat availability	🚧 In progress
+### 🧑‍💼 User Service  
+Manages user registration, login, and authentication  
+**Status:** ✅ Completed  
+
+### 🛫 Flight Service  
+Handles flight schedules, routes, and airline data  
+**Status:** 🚧 In Progress  
+
+### 📘 Booking Service  
+Manages ticket booking, payments, and seat availability  
+**Status:** 🚧 In Progress  
 
 Each service runs on a different port and communicates via REST APIs.
 Eventually, these services will be containerized and connected using Docker Compose.
