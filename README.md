@@ -68,7 +68,7 @@ Understand how to build scalable APIs using FastAPI
 
 Learn microservices architecture using Python
 
-Integrate PostgreSQL with SQLAlchemy ORM
+Integrate PostgreSQL with Asyncpg (Raw SQL)
 
 Practice good project structure, versioning, and documentation
 
