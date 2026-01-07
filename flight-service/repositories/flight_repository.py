@@ -23,7 +23,8 @@ class FlightRepository:
             """
             SELECT 
                 f.id, f.flight_number, f.departure_time, f.arrival_time,
-                f.duration_minutes, f.base_price, f.currency,
+                f.base_price,f.currency,fr.estimated_duration  AS duration_times,
+                EXTRACT(EPOCH FROM fr.estimated_duration) / 60 AS duration_minutes,
                 a.code AS airline_code, a.name AS airline_name,
                 dep.code AS dep_code, arr.code AS arr_code,
                 COUNT(fs.id) FILTER (WHERE fs.is_available = TRUE) AS available_seats
@@ -31,14 +32,15 @@ class FlightRepository:
             JOIN airlines a ON f.airline_id = a.id
             JOIN airports dep ON f.departure_airport_id = dep.id
             JOIN airports arr ON f.arrival_airport_id = arr.id
-            LEFT JOIN flight_seats fs ON f.id = fs.flight_id
+            LEFT JOIN seats fs ON f.id = fs.flight_id
+            JOIN flight_routes fr ON f.flight_route_id = fr.id
             WHERE 
                 f.departure_airport_id = $1
                 AND f.arrival_airport_id = $2
                 AND f.departure_time >= $3
                 AND f.departure_time < $4
                 AND f.is_active = TRUE
-            GROUP BY f.id, a.code, a.name, dep.code, arr.code
+            GROUP BY f.id, a.code, a.name, dep.code, arr.code,fr.estimated_duration
             ORDER BY f.departure_time
             """,
             dep_airport['id'], arr_airport['id'], date_obj, next_day

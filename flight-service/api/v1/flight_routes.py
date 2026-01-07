@@ -3,34 +3,61 @@ from database import get_db
 from repositories.flight_repository import FlightRepository
 from repositories.seat_repository import SeatRepository
 from services.flight_service import FlightService
-from models.flight import FlightSearchRequest
+from models.flight import FlightSearchRequest,FlightResponse
+from typing import List
 
 router = APIRouter(prefix="/api/v1/flights", tags=["flights"])
 
-@router.post("/search")
+#@router.post("/search")--old
+
+@router.post(
+    "/search",
+    response_model=dict[str, list[FlightResponse]]
+)
 async def search_flights(request: FlightSearchRequest, conn=Depends(get_db)):
     repo = FlightRepository(conn)
     service = FlightService(repo, SeatRepository(conn))
     flights = await service.search_flights(request)
     return {
         "flights": [
-            {
-                "flight_id": str(f['id']),
-                "flight_number": f['flight_number'],
-                "airline_code": f['airline_code'],
-                "airline_name": f['airline_name'],
-                "departure_airport": f['dep_code'],
-                "arrival_airport": f['arr_code'],
-                "departure_time": f['departure_time'],
-                "arrival_time": f['arrival_time'],
-                "duration_minutes": f['duration_minutes'],
-                "base_price": float(f['base_price']),
-                "currency": f['currency'],
-                "available_seats": f['available_seats']
-            }
+            FlightResponse(
+                id=f['id'],
+                flight_number=f['flight_number'],
+                airline_code=f['airline_code'],
+                airline_name=f['airline_name'],
+                departure_airport=f['dep_code'],
+                arrival_airport=f['arr_code'],
+                departure_time=f['departure_time'],
+                arrival_time=f['arrival_time'],
+                duration_times=f['duration_times'],  # timedelta
+                duration_minutes=f['duration_minutes'],
+                base_price=float(f['base_price']),
+                currency=f['currency'],
+                available_seats=f['available_seats']
+            )
             for f in flights
         ]
     }
+    # return {
+    #     "flights": [
+    #         {
+    #             "id": str(f['id']),
+    #             "flight_number": f['flight_number'],
+    #             "airline_code": f['airline_code'],
+    #             "airline_name": f['airline_name'],
+    #             "departure_airport": f['dep_code'],
+    #             "arrival_airport": f['arr_code'],
+    #             "departure_time": f['departure_time'],
+    #             "arrival_time": f['arrival_time'],
+    #             "duration_times": f['duration_times'],
+    #             "duration_minutes": f['duration_minutes'],
+    #             "base_price": float(f['base_price']),
+    #             #"currency": f['currency'],
+    #             "available_seats": f['available_seats']
+    #         }
+    #         for f in flights
+    #     ]
+    # }
 
 @router.post("/reserve")
 async def reserve_seats(

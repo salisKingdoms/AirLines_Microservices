@@ -11,7 +11,7 @@ class SeatRepository:
         """
         placeholders = ', '.join(f'${i+1}' for i in range(len(seat_numbers)))
         query = f"""
-            UPDATE flight_seats 
+            UPDATE seats 
             SET is_available = FALSE, updated_at = NOW()
             WHERE flight_id = $1 
               AND seat_number = ANY(ARRAY[{placeholders}])
