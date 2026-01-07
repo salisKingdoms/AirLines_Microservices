@@ -5,6 +5,7 @@ from repositories.seat_repository import SeatRepository
 from services.flight_service import FlightService
 from models.flight import FlightSearchRequest,FlightResponse
 from typing import List
+from datetime import timedelta
 
 router = APIRouter(prefix="/api/v1/flights", tags=["flights"])
 
@@ -30,6 +31,7 @@ async def search_flights(request: FlightSearchRequest, conn=Depends(get_db)):
                 departure_time=f['departure_time'],
                 arrival_time=f['arrival_time'],
                 duration_times=f['duration_times'],  # timedelta
+                duration_times_str=format_duration(f['duration_times']), 
                 duration_minutes=f['duration_minutes'],
                 base_price=float(f['base_price']),
                 currency=f['currency'],
@@ -75,3 +77,10 @@ async def reserve_seats(
     if not success:
         raise HTTPException(409, "One or more seats are no longer available")
     return {"status": "reserved", "seats": seat_numbers}
+
+def format_duration(td: timedelta) -> str:
+    total_seconds = int(td.total_seconds())
+    h = total_seconds // 3600
+    m = (total_seconds % 3600) // 60
+    s = total_seconds % 60
+    return f"{h:02}:{m:02}:{s:02}"
