@@ -56,10 +56,20 @@ uvicorn app.main:app --reload --port 8001
 
 ## Then open your browser:
 
+### 🧑‍💼 User Service 
 👉 http://127.0.0.1:8000/docs
  to explore the Swagger UI
 
  <img width="977" height="977" alt="image" src="https://github.com/user-attachments/assets/1a60743f-9fe5-4b47-92e5-0c5b22cffe49" />
+
+### 🛫 Flight Service  
+👉 http://127.0.0.1:8001/docs
+ to explore the Swagger UI
+
+<img width="977" height="977" alt="image" src="https://github.com/user-attachments/assets/0d08126d-2c7f-4e9f-ae5a-d1bcddbe2832" />
+
+Example of curl
+<img width="977" height="977" alt="image" src="https://github.com/user-attachments/assets/7861556e-614a-43d1-b229-7cb573fe13b2" />
 
 
 ## 🧠 Learning Objectives
