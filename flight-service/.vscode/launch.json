@@ -6,16 +6,15 @@
     "configurations": [
         {
             "name": "Python Debugger: FastAPI",
-            "type": "debugpy",
+            "type": "python",
             "request": "launch",
             "module": "uvicorn",
             "args": [
                 "main:app",
-                "--reload",
                 "--port",
                 "8001"
             ],
-            "jinja": true
+            "justMyCode": false
         }
     ]
 }

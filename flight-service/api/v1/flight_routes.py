@@ -1,7 +1,8 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Query
 from database import get_db
 from repositories.flight_repository import FlightRepository
 from repositories.seat_repository import SeatRepository
+from repositories.airline_repository import AirlineRepository
 from services.flight_service import FlightService
 from models.flight import FlightSearchRequest,FlightResponse
 from typing import List
@@ -84,3 +85,47 @@ def format_duration(td: timedelta) -> str:
     m = (total_seconds % 3600) // 60
     s = total_seconds % 60
     return f"{h:02}:{m:02}:{s:02}"
+
+#name: str| None, code: str | None, is_active: bool | None, page: int=1, page_size: int = 10
+@router.get("/airlines")
+async def get_airline_list(
+    airline_name: str|None = Query(
+        default=None,
+        description="filter by airline name"
+    ),
+    airline_code: str|None = Query(
+        default=None,
+        description="filter by airline code"
+    ),
+    is_active: bool|None = Query(
+        default=None,
+        description="filter by active status"
+    ),
+    page : int = Query(
+        default=1,
+        ge=1,
+        description="Page Number"
+    ),
+    page_size: int = Query(
+        default=10,
+        ge=1,
+        le=100,
+        description="Item per page"
+    ),
+    conn=Depends(get_db),
+):
+    repo = AirlineRepository(conn)
+
+    rows = await repo.search_airlines(
+        name=airline_name,
+        code=airline_code,
+        is_active=is_active,
+        page=page,
+        page_size=page_size
+    )
+
+    return {
+        "page": page,
+        "page_size" : page_size,
+        "data" : rows
+    }
